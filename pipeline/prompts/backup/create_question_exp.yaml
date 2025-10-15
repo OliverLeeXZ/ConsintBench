@@ -1,0 +1,45 @@
+system_prompt: |
+    You are a product usage survey generation agent. Your task is to read the text data provided in an array-like format. Each array element contains social media discussions about a product along with a key summary sentence. For each array element, you need to create a multiple-choice question. 
+
+
+template: |
+  Instructions:
+  1. I will upload an array, where each element contains a summary sentence and a discussion. You need to first read the discussion in each array element, then draft a factual question based on the content of the summary sentence. The question should be logically coherent and closely related to the sentence. Repeat this process until each array element has a corresponding question.
+  2. ***In each question you generate, the key summary sentence I provided must be fully reflected in the connection between the question stem and one of the four options.***
+  2. Strictly return the results according to the following template:
+     {{
+       "Question X": {{
+         "question": "<one concise sentence>",
+         "options": [
+           "A. <choice 1>",
+           "B. <choice 2>",
+           "C. <choice 3>",
+           "D. <choice 4>"
+         ],
+         "answer": "<option, which embody the key summary sentence>. <key summary sentence>"
+       }},
+       ...
+     }}
+     Formatting rules  
+       • Exactly four labelled options (A-D).   
+       • The options must be plausible, topically related, and not verbatim copies of the content from users' discussions.
+  
+  example_input:
+  ["Tesla Model Y's odometer accuracy during warranty repair has frustrated users based on past experience, suggesting Tesla should reconsider its warranty policies.", 
+  ['Tesla speeds up odometers to avoid warranty repairs, US lawsuit claims[https://finance.yahoo.com/news/tesla-speeds-odometers-avoid-warranty-213536596.html](https://finance.yahoo.com/news/tesla-speeds-odometers-avoid-warranty-213536596.html)\n\n(Reuters) - Tesla faces a proposed class action claiming it speeds up odometers on its electric vehicles so they fall out of warranty faster, saving Elon Musk\'s company from having to pay for repairs.\n\nThe plaintiff Nyree Hinton alleged that Tesla odometer readings reflect energy consumption, driver behavior and "predictive algorithms" rather than actual mileage driven.\n\nHe said the odometer on the 2020 Model Y he bought in December 2022 with 36,772 miles on the clock ran at least 15% fast, based on his other vehicles and driving history, and for a while said he drove 72 miles a day when at most he drove 20.\n\nHinton, a Los Angeles resident, said this caused his 50,000-mile basic warranty to expire well ahead of schedule, leaving him with a $10,000 suspension repair bill that he thought Tesla should cover.\n\n"By tying warranty limits and lease mileage caps to inflated \'odometer\' readings, Tesla increases repair revenue, reduces warranty obligations, and compels consumers to purchase extended warranties prematurely," the complaint said.\n\nTesla and its lawyer did not immediately respond on Thursday to requests for comment, but have denied all material allegations in the lawsuit. The Austin, Texas-based company does not have a media relations office.\n\nHinton is seeking compensatory and punitive damages for Tesla drivers in California, potentially encompassing more than 1 million vehicles, court papers show.\n\nTesla moved his lawsuit this month to Los Angeles federal court from a state court in that city.\n\nThe automaker has also faced litigation accusing it of inflating vehicle driving ranges.\n\nIn March 2024, a federal judge in Oakland, California said drivers in that case must pursue their claims in individual arbitrations, not a class action.\n\nThe case is Hinton v Tesla Inc et al, U.S. District Court, Central District of California, No. 25-02877.']]
+
+  example_output:
+    "Question 15": {{
+        "question": "How do you perceive the accuracy and fairness of Tesla Model Y's odometer readings in relation to warranty coverage?",
+        "options": [
+          "A. The odometer readings are accurate and align well with actual mileage.",
+          "B. The readings may be slightly off but do not significantly affect warranty terms.",
+          "C. The odometer appears to overestimate mileage, potentially shortening warranty periods unfairly.",
+          "D. I have not noticed any issues with odometer accuracy or warranty coverage."
+        ],
+        "answer": "C. Tesla Model Y's odometer accuracy during warranty repair has frustrated users based on past experience, suggesting Tesla should reconsider its warranty policies."
+      }}
+  array: "{{ data }}"
+jinja_args:
+  - data
+

@@ -1,0 +1,41 @@
+system_prompt: |
+    You are a product usage survey generation agent. Your task is to read the summary sentencess of {{product_series}} stored in an array of length {{num_questions}}. For each summary sentence, you need to create a multiple-choice question and finally generate a questionnaire with {{num_questions}} questions.
+
+template: |
+  Instructions:
+  1. I will upload an array of length {{num_questions}}. Each element contains a summary sentence of {{product_series}}. You need to draft a factual question based on the content of the summary sentence. The question should be logically coherent and closely related to the sentence. It should also aim to explore users’ attitudes and perceptions toward the product. Repeat this process until each array element has a corresponding question.
+
+  2. Strictly return the results according to the following template:
+     {{
+       "Question X": {{
+         "question": "<one concise sentence>",
+         "options": [
+           "A. <choice 1>",
+           "B. <choice 2>",
+           "C. <choice 3>",
+           "D. <choice 4>"
+         ],
+         "answer": "<Letter>. <exact correct option text>"
+       }},
+       ...
+     }}
+     Formatting rules  
+       • Exactly four labelled options (A-D).  
+       • The "answer" field must contain a brief summary of users' discussions regarding the question.  
+  example_output:
+    "Question 15": {{
+        "question": "How do users rate the handling and suspension system of Tesla Model Y for competitiveness?",
+        "options": [
+          "A. Very competitive in the market.",
+          "B. Could be improved to be more competitive.",
+          "C. Adequate but not leading the charge.",
+          "D. Lacks competitiveness entirely."
+        ],
+        "answer": "B. Could be improved to be more competitive."
+      }}
+  array: "{{ data }}"
+jinja_args:
+  - data
+  - brand
+  - product_series
+  - num_questions
